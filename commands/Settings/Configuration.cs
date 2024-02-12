@@ -1,0 +1,79 @@
+﻿using DSharpPlus.CommandsNext.Attributes;
+using DSharpPlus.CommandsNext;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using DSharpPlus;
+using DSharpPlus.Entities;
+
+namespace PerditionGuardBot.commands
+{
+    public class Configuration : BaseCommandModule // idk if i'll need to change this for theses commands yet
+    {
+        // Configuration Command List
+        //
+        // 1: welcome & leave (needs testing again) (no altering command yet | no need)
+        // 2: help (not started) (basically just one large embedded message) (add buttons for pages) (categorise the commands)
+        // 3: blacklist (not started)
+        // 4: autodelete (not started)
+        // 5: info and rule commands (perdition only) (not started)
+        // 6: kill (working) spent 2 hours trying to make a reconnect command but it's not possible.
+        // 7: sticky roles (not started)
+        // 8: prefix (not started)
+        // 9: reaction roles (not started)
+        // -1: profiles (starting)
+        //
+        // End
+
+        // use leaveasync to leave the server if I get banned or kicked
+
+        // help
+
+        // prefix
+
+        [Command("configurationtest")]
+        public async Task Test(CommandContext ctx)
+        {
+            await ctx.Channel.SendMessageAsync($"Testing Configurations\n{ctx.Client.Ping}"); // displays testing messgae and sends current ping for each response etc
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
+            if (ctx.Member.Permissions.HasPermission(Permissions.ManageGuild))
+            {
+                await ctx.Channel.SendMessageAsync("true");
+            }
+            else
+                await ctx.Channel.SendMessageAsync("false");
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
+        }
+
+
+        // Bot control commands
+
+
+        [Command("Kill")]
+        public async Task Kill(CommandContext ctx)
+        {
+            if (ctx.Member.Id == 514141397960359970 || ctx.Member.Id == 596553233024155679)
+            {
+                var message = await ctx.Channel.SendMessageAsync("Shutting down in 3 seconds");
+                await Task.Delay(2500);
+                await message.DeleteAsync();
+                await ctx.Client.DisconnectAsync();
+                Environment.Exit(0);
+            }
+            else
+            {
+                var RestrictedEmbed = new DiscordEmbedBuilder()
+                {
+                    Color = DiscordColor.Red,
+                    Title = "Permission Denied",
+                    Description = "Must be Kay or Koro to use this command"
+                };
+                var LackPermsMessage = await ctx.Channel.SendMessageAsync(RestrictedEmbed);
+                await Task.Delay(5000);
+                await LackPermsMessage.DeleteAsync();
+            }
+        }
+    }
+}

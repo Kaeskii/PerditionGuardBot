@@ -1,0 +1,279 @@
+﻿using DSharpPlus;
+using DSharpPlus.CommandsNext;
+using DSharpPlus.Entities;
+using DSharpPlus.EventArgs;
+using DSharpPlus.Interactivity;
+using DSharpPlus.Interactivity.Extensions;
+using PerditionGuardBot.commands;
+using PerditionGuardBot.commands.Basic;
+using PerditionGuardBot.config;
+using PerditionGuardBot.TicketsSystem;
+using System;
+using System.Collections.Generic;
+using System.Formats.Asn1;
+using System.Linq;
+using System.Threading.Channels;
+using System.Threading.Tasks;
+
+namespace PerditionGuardBot
+{
+    internal class ProgramMain
+    {
+        // Notes:
+        // I want all the permission related commands to send me a seperate DM with the user's name and the command they used. This makes an easy way to track who is using the bot and what they are doing with it.
+        // It also prevents missuse of the bot.
+        //
+        //
+        //
+        //
+        //
+        //
+        public static DiscordClient? Client { get; set; }
+
+        private static CommandsNextExtension commands;
+
+        // this if for the commands properties
+        public static CommandsNextExtension GetCommands()
+        {
+            return commands;
+        }
+
+        // this if for the commands properties
+        public static void SetCommands(CommandsNextExtension value)
+        {
+            commands = value;
+        }
+
+        public static LoggingSystem? logger;
+        private static Dictionary<string, ulong> Vcids = new();
+        // gonna need one for profiles (dictionary)
+        static async Task Main(string[] args)
+        {
+            logger = LoggingSystem.Instance;
+
+            var jsonReader = new JSONReader();
+            await jsonReader.ReadJSON();
+
+            var discordConfig = new DiscordConfiguration()
+            {
+                Intents = DiscordIntents.All,
+                Token = jsonReader.token,
+                TokenType = TokenType.Bot,
+                AutoReconnect = true,
+            };
+
+            Client = new DiscordClient(discordConfig);
+
+            Client.UseInteractivity(new InteractivityConfiguration()
+            {
+                Timeout = TimeSpan.FromMinutes(1) // this is the default timout for all of the interactions except ones with overrides for the specific command
+            });
+
+            // Set all EVENTS to be tracked here (event handle area)
+            Client.Ready += Client_Ready;
+            Client.VoiceStateUpdated += VoiceChannelHandling;
+            Client.MessageCreated += MessageCreationHandling;
+            Client.GuildMemberAdded += WelcomeMessage;
+            Client.GuildMemberRemoved += LeaveMessage;
+            // This is for interactable buttons do not touch.
+            Client.ComponentInteractionCreated += ComponentCreationHandling;
+            Client.ModalSubmitted += ModalCreationHandling;
+
+            // (end of event handle area)
+            // The bot sets up properly here
+
+            var commandsConfig = new CommandsNextConfiguration()
+            {
+                StringPrefixes = new string[] { jsonReader.prefix },
+                EnableMentionPrefix = true,
+                EnableDms = true,
+                EnableDefaultHelp = false,
+                QuotationMarks = "" // if anything breaks it's this (command wise)
+            };
+
+            SetCommands(Client.UseCommandsNext(commandsConfig));
+            // for all the test commands
+            GetCommands().RegisterCommands<TestCommands>();
+            // registering other command areas
+            GetCommands().RegisterCommands<Administration>();
+            GetCommands().RegisterCommands<Moderation>();
+            GetCommands().RegisterCommands<Tickets>();
+            // prefix commands and server settings
+            GetCommands().RegisterCommands<Configuration>();
+            GetCommands().RegisterCommands<Everyone>();
+
+            await Client.ConnectAsync();
+            await Task.Delay(-1);
+        }
+        // use arg here instead of ctx because these ARE NOT COMMANDS they are EVENTS
+        private static async Task VoiceChannelHandling(DiscordClient send, VoiceStateUpdateEventArgs? arg) // vc events
+        {
+            await Task.CompletedTask;
+            // these are bugging out right now
+        }
+
+        private static async Task MessageCreationHandling(DiscordClient client, MessageCreateEventArgs arg) // the blacklist is a class to keep ProgramMain clean.
+        {
+            if (!arg.Author.IsBot)
+            {
+                // blacklist
+                var blacklist = new Blacklist();
+                foreach (var blword in blacklist.blacklist)
+                {
+                    if (arg.Message.Content.ToLower().Contains(blword)) // wildcard (works anywhere in a messge) and not case sensitive.
+                    {
+                        await arg.Message.DeleteAsync();
+                        DiscordMessage message = await arg.Channel.SendMessageAsync("don't say that here.");
+                        await Task.Delay(10000); // waits 10 seconds
+                        await arg.Channel.DeleteMessageAsync(message); // deletes
+                    }
+                }
+                //ticket message logger
+                var messages = new Transcripts
+                {
+                    Username = arg.Author.Username,
+                    ChannelId = arg.Channel.Id,
+                    Content = arg.Message.Content,
+                    SendDate = DateTime.Now,
+                };
+                logger.messages.Add(messages);
+            } // I can probably use this for an image only channel too.
+        }
+
+        private static async Task WelcomeMessage(DiscordClient client, GuildMemberAddEventArgs arg) // join server message (needs some improvement)
+        {
+            var jchannel = arg.Guild.GetDefaultChannel();
+            if (arg.Guild.Id == 964579124985352192) // perdition discord server
+            {
+                jchannel = arg.Guild.GetChannel(965331297591525396);
+            }
+            var welcome = new DiscordEmbedBuilder()
+            {
+                Color = Settings.GetPrimaryColor(),
+                Title = $"Welcome {arg.Member.Username} to {arg.Guild.Name}.",
+                Description = $"Please ensure you follow typical common sense if you have any.",
+                Thumbnail = new DiscordEmbedBuilder.EmbedThumbnail { Url = arg.Member.AvatarUrl }
+            };
+            await jchannel.SendMessageAsync(embed: welcome);
+        }
+
+        private static async Task LeaveMessage(DiscordClient client, GuildMemberRemoveEventArgs arg) // leave server message
+        {
+            var dchannel = arg.Guild.GetDefaultChannel();
+            if (arg.Guild.Id == 964579124985352192)
+            {
+                dchannel = arg.Guild.GetChannel(965331297591525396);
+            }
+            var left = new DiscordEmbedBuilder()
+            {
+                Color = DiscordColor.Black,
+                Title = $"{arg.Member.Username} escaped {arg.Guild.Name}.",
+                Description = $"They have moved onto a better place.",
+                Thumbnail = new DiscordEmbedBuilder.EmbedThumbnail { Url = arg.Member.AvatarUrl }
+            };
+            await dchannel.SendMessageAsync(embed: left);
+        }
+
+        private static async Task ComponentCreationHandling(DiscordClient client, ComponentInteractionCreateEventArgs arg)
+        {
+            var TicketConstruct = new TicketConstruct();
+            switch (arg.Interaction.Data.CustomId)
+            {
+                // begining of ticket buttons
+                case "helpButton":
+                    var openModal = new DiscordInteractionResponseBuilder()
+                        .WithCustomId("openModalForm")
+                        .WithTitle("Open support ticket")
+                        .AddComponents(new TextInputComponent("Include all relevant details: ", "openTextBox"));
+                    await arg.Interaction.CreateResponseAsync(InteractionResponseType.Modal, openModal);
+                    break;
+                case "viewButton":
+                    var tickets = TicketConstruct.GetTickets();
+                    int count = 0;
+                    string[] tempList = new string[tickets.Count];
+                    foreach (var ticket in tickets)
+                    {
+                        tempList[count] = $"**Ticket-**{ticket.TicketNo}, **TicketID:** {ticket.TicketId}, **Opened By:** {ticket.User}";
+                        count++;
+                    }
+                    var ticketsView = new DiscordEmbedBuilder()
+                    {
+                        Color = Settings.GetPrimaryColor(),
+                        Title = "Normal Tickets:",
+                        Description = string.Join("\n", tempList)
+                    };
+                    await arg.Interaction.CreateResponseAsync(InteractionResponseType.UpdateMessage, new DiscordInteractionResponseBuilder().AddEmbed(ticketsView));
+                    break;
+                case "deleteIdButton":
+                    var deleteId = new DiscordEmbedBuilder()
+                        .WithColor(DiscordColor.White)
+                        .WithTitle("Enter ticket ID");
+                    await arg.Interaction.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource, new DiscordInteractionResponseBuilder().AddEmbed(deleteId));
+                    var ID = await arg.Channel.GetNextMessageAsync();
+                    var isDeleted = TicketConstruct.DeleteTicket(ulong.Parse(ID.Result.Content));
+                    if (isDeleted == true)
+                    {
+                        var success = new DiscordEmbedBuilder()
+                        {
+                            Color = Settings.GetPrimaryColor(),
+                            Title = $"Deleted ticket: {ID.Result.Content}"
+                        };
+                        await arg.Channel.SendMessageAsync(embed: success);
+                    }
+                    else
+                    {
+                        var failed = new DiscordEmbedBuilder()
+                        {
+                            Color = DiscordColor.Red,
+                            Title = $"**{ID.Result.Content}**, is not a valid ticket."
+                        };
+                        await arg.Channel.SendMessageAsync(embed: failed);
+                    }
+                    break;
+            }
+        }
+
+        private static async Task ModalCreationHandling(DiscordClient client, ModalSubmitEventArgs arg)
+        {
+            var modalValues = arg.Values;
+            if (arg.Interaction.Type == InteractionType.ModalSubmit && arg.Interaction.Data.CustomId == "openModalForm") // this creates the normal tickets
+            {
+                var random = new Random();
+                var ticketConstruct = new TicketConstruct();
+                ulong minV = 1000000000000000000;
+                ulong maxV = 9999999999999999999;
+                ulong randomId = (ulong)random.Next((int)(minV >> 32), int.MaxValue) << 32 | (ulong)random.Next();
+                ulong result = randomId % (maxV - minV + 1) + minV;
+                var openTicket = new NormalTickets()
+                {
+                    User = arg.Interaction.User.Username,
+                    Content = modalValues.Values.First(),
+                    TicketNo = ticketConstruct.TotTickets() + 1,
+                    TicketId = result
+                };
+                var openChannel = await arg.Interaction.Guild.CreateChannelAsync($"Ticket-{openTicket.TicketNo}", ChannelType.Text, arg.Interaction.Channel.Parent); // ticket creation
+                ticketConstruct.Transcript(openTicket);
+                var empty = new DiscordEmbedBuilder()
+                {
+                    Color = Settings.GetPrimaryColor(),
+                    Title = $"{arg.Interaction.User.Username} opened a ticket"
+                };
+                var contextEmbed = new DiscordEmbedBuilder() // will change this to have it's own control pannel will need an overhaul for the embed building though
+                {
+                    Color = Settings.GetPrimaryColor(),
+                    Title = $"{arg.Interaction.User.Username} opened a ticket.",
+                    Description = $"**Context:** {modalValues.Values.First()} \n\n**Ticket ID:** {openTicket.TicketId}"
+                };
+                await openChannel.SendMessageAsync(embed: contextEmbed);
+                await arg.Interaction.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource, new DiscordInteractionResponseBuilder().AddEmbed(empty));
+                await Task.Delay(3000);
+                // method needed to delete the embed here but I don't know how
+            }
+        }
+
+        private static Task Client_Ready(DiscordClient sender, DSharpPlus.EventArgs.ReadyEventArgs args) // runs after everything had loaded which actually starts the bot usually takes less than a second
+        {
+            return Task.CompletedTask; // reports when tasks have been completed in the console (commands)
+        }
+    }
+}
