@@ -57,7 +57,7 @@ namespace PerditionGuardBot
             var discordConfig = new DiscordConfiguration()
             {
                 Intents = DiscordIntents.All,
-                Token = jsonReader.token,
+                Token = jsonReader.Token,
                 TokenType = TokenType.Bot,
                 AutoReconnect = true,
             };
@@ -84,7 +84,7 @@ namespace PerditionGuardBot
 
             var commandsConfig = new CommandsNextConfiguration()
             {
-                StringPrefixes = new string[] { jsonReader.prefix },
+                StringPrefixes = new string[] { jsonReader.Prefix },
                 EnableMentionPrefix = true,
                 EnableDms = true,
                 EnableDefaultHelp = false,

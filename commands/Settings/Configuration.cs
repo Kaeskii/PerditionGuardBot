@@ -21,7 +21,7 @@ namespace PerditionGuardBot.commands
         // 5: info and rule commands (perdition only) (not started)
         // 6: kill (working) spent 2 hours trying to make a reconnect command but it's not possible.
         // 7: sticky roles (not started)
-        // 8: prefix (not started)
+        // 8: prefix (not started) spent a few hours trying to make this too but couldn't find a way to do it. It would work but not without a restart of the bot.
         // 9: reaction roles (not started)
         // -1: profiles (starting)
         //
@@ -37,14 +37,12 @@ namespace PerditionGuardBot.commands
         public async Task Test(CommandContext ctx)
         {
             await ctx.Channel.SendMessageAsync($"Testing Configurations\n{ctx.Client.Ping}"); // displays testing messgae and sends current ping for each response etc
-#pragma warning disable CS8602 // Dereference of a possibly null reference.
             if (ctx.Member.Permissions.HasPermission(Permissions.ManageGuild))
             {
                 await ctx.Channel.SendMessageAsync("true");
             }
             else
                 await ctx.Channel.SendMessageAsync("false");
-#pragma warning restore CS8602 // Dereference of a possibly null reference.
         }
 
 
