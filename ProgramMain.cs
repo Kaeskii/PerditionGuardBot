@@ -6,6 +6,7 @@ using DSharpPlus.Interactivity;
 using DSharpPlus.Interactivity.Extensions;
 using PerditionGuardBot.commands;
 using PerditionGuardBot.commands.Basic;
+using PerditionGuardBot.commands.ProfileSystem;
 using PerditionGuardBot.config;
 using PerditionGuardBot.TicketsSystem;
 using System;
@@ -128,7 +129,7 @@ namespace PerditionGuardBot
                         await arg.Channel.DeleteMessageAsync(message); // deletes
                     }
                 }
-                //ticket message logger
+                // ticket message logger
                 var messages = new Transcripts
                 {
                     Username = arg.Author.Username,
@@ -137,11 +138,53 @@ namespace PerditionGuardBot
                     SendDate = DateTime.Now,
                 };
                 logger.messages.Add(messages);
+                // xp and level system
+                var ProfileConstruct = new ProfileConstruct();
+                ProfileConstruct.AddXP(arg.Author.Username, arg.Author.Id, 1); // last value is the xp per message
+                if (ProfileConstruct.levelup)
+                {
+                    var levelupmessage = await arg.Channel.SendMessageAsync($"{arg.Author.Mention} has leveled up to level {ProfileConstruct.GetUserInfo(arg.Author.Username, arg.Author.Id).Level}!");
+                    await Task.Delay(5000);
+                    await arg.Channel.DeleteMessageAsync(levelupmessage);
+                }
             } // I can probably use this for an image only channel too.
         }
 
         private static async Task WelcomeMessage(DiscordClient client, GuildMemberAddEventArgs arg) // join server message (needs some improvement)
         {
+            var UserInfo = new StoredUserInfo()
+            {
+                UserName = arg.Member.Username,
+                UserID = arg.Member.Id,
+                AvatarURL = arg.Member.AvatarUrl,
+                Level = 1,
+                XP = 0,
+                Bans = 0,
+                Kicks = 0,
+                Warnings = 0,
+                McbeCheater = false,
+                McbeCheaterCaughtBy = "Null",
+                IsBooster = false,
+            };
+            var ProfileConstruct = new ProfileConstruct();
+            var DoesExist = ProfileConstruct.CheckIfUserAlreadyExists(arg.Member.Username, arg.Member.Id);
+            string ProfileMessage = "";
+            if (DoesExist == false)
+            {
+                var Stored = ProfileConstruct.StoreUserInfo(UserInfo);
+                if (Stored == true)
+                {
+                    ProfileMessage = "pc";
+                }
+                else
+                {
+                    ProfileMessage = "epc";
+                }
+            }
+            if (DoesExist == true)
+            {
+                ProfileMessage = "pae";
+            }
             var jchannel = arg.Guild.GetDefaultChannel();
             if (arg.Guild.Id == 964579124985352192) // perdition discord server
             {
@@ -152,6 +195,7 @@ namespace PerditionGuardBot
                 Color = Settings.GetPrimaryColor(),
                 Title = $"Welcome {arg.Member.Username} to {arg.Guild.Name}.",
                 Description = $"Please ensure you follow typical common sense if you have any.",
+                Footer = new DiscordEmbedBuilder.EmbedFooter { Text = ProfileMessage + " | Enjoy your stay" },
                 Thumbnail = new DiscordEmbedBuilder.EmbedThumbnail { Url = arg.Member.AvatarUrl }
             };
             await jchannel.SendMessageAsync(embed: welcome);
