@@ -29,7 +29,7 @@ namespace PerditionGuardBot.commands
                 .AddEmbed(new DiscordEmbedBuilder() // here has embed builder inside of a message builder, very ineficient but this is for embeds with interactable buttons
                 .WithTitle("testing embed functions")
                 .WithDescription($"Execution by {ctx.User.Username}"));
-            await ctx.Channel.SendMessageAsync(message);
+            await ctx.RespondAsync(message);
         }
         // a better way to do the above that just looks more readable
         [Command("embedneat")]
@@ -41,7 +41,7 @@ namespace PerditionGuardBot.commands
                 Description = $"Execution by {ctx.User.Username}",
                 Color = DiscordColor.HotPink
             };
-            await ctx.Channel.SendMessageAsync(embed: message);
+            await ctx.RespondAsync(embed: message);
         }
         [Command("interactivitytest")]
         public async Task InteractivityTest(CommandContext ctx)
@@ -50,7 +50,7 @@ namespace PerditionGuardBot.commands
             var messageToRestrieve = await interactivity.WaitForMessageAsync(message => message.Content == "Hello");
             if (messageToRestrieve.Result.Content == "Hello")
             {
-                await ctx.Channel.SendMessageAsync($"testing autoresponse with {ctx.User.Username}");
+                await ctx.RespondAsync($"testing autoresponse with {ctx.User.Username}");
             }
         }
     }

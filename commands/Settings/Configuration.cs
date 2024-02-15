@@ -39,10 +39,10 @@ namespace PerditionGuardBot.commands
             await ctx.Channel.SendMessageAsync($"Testing Configurations\n{ctx.Client.Ping}"); // displays testing messgae and sends current ping for each response etc
             if (ctx.Member.Permissions.HasPermission(Permissions.ManageGuild))
             {
-                await ctx.Channel.SendMessageAsync("true");
+                await ctx.RespondAsync("true");
             }
             else
-                await ctx.Channel.SendMessageAsync("false");
+                await ctx.RespondAsync("false");
         }
 
 
@@ -54,7 +54,7 @@ namespace PerditionGuardBot.commands
         {
             if (ctx.Member.Id == 514141397960359970 || ctx.Member.Id == 596553233024155679)
             {
-                var message = await ctx.Channel.SendMessageAsync("Shutting down in 3 seconds");
+                var message = await ctx.RespondAsync("Shutting down in 3 seconds");
                 await Task.Delay(2500);
                 await message.DeleteAsync();
                 await ctx.Client.DisconnectAsync();
@@ -68,7 +68,7 @@ namespace PerditionGuardBot.commands
                     Title = "Permission Denied",
                     Description = "Must be Kay or Koro to use this command"
                 };
-                var LackPermsMessage = await ctx.Channel.SendMessageAsync(RestrictedEmbed);
+                var LackPermsMessage = await ctx.RespondAsync(RestrictedEmbed);
                 await Task.Delay(5000);
                 await LackPermsMessage.DeleteAsync();
             }

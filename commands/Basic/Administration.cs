@@ -34,19 +34,19 @@ namespace PerditionGuardBot.commands
 
             if (ctx.Member.Permissions.HasPermission(Permissions.Administrator))
             {
-                await ctx.Channel.SendMessageAsync($"Testing admin functions\nping: {ctx.Client.Ping}\ntrue : admin permissions accessible"); // displays testing messgae and sends current ping for each response etc
+                await ctx.RespondAsync($"Testing admin functions\nping: {ctx.Client.Ping}\ntrue : admin permissions accessible"); // displays testing messgae and sends current ping for each response etc
                 var adminEmbedTest = new DiscordEmbedBuilder()
                 {
                     Color = Settings.GetPrimaryColor(),
                     Title = "Embeds are white",
                     Description = $"The color name is displayed as: {Settings.GetNameOfColor()}"
                 };
-                await ctx.Channel.SendMessageAsync(adminEmbedTest);
+                await ctx.RespondAsync(adminEmbedTest);
             }
             else
             {
-                await ctx.Channel.SendMessageAsync($"Testing admin functions\nping: {ctx.Client.Ping}");
-                await ctx.Channel.SendMessageAsync("false : lacking admin permission");
+                await ctx.RespondAsync($"Testing admin functions\nping: {ctx.Client.Ping}");
+                await ctx.RespondAsync("false : lacking admin permission");
             }
         }
         [Command("admintesttu")] // target user
@@ -54,7 +54,7 @@ namespace PerditionGuardBot.commands
         {
             if (ctx.Member.Permissions.HasPermission(Permissions.Administrator))
             {
-                await ctx.Channel.SendMessageAsync($"Target User data: {targetUser}");
+                await ctx.RespondAsync($"Target User data: {targetUser}");
             }
         }
 
@@ -79,7 +79,7 @@ namespace PerditionGuardBot.commands
                     Title = $"{targetUser.Username} Banned",
                     Description = $"By: {ctx.User.Username}, With reason: {OriginalReason}",
                 };
-                await ctx.Channel.SendMessageAsync(BannedEmbed); // ban message but sends a long string of information instead of just the user ID or mention.
+                await ctx.RespondAsync(BannedEmbed); // ban message but sends a long string of information instead of just the user ID or mention.
             }
             if (!ctx.Member.Permissions.HasPermission(Permissions.BanMembers))
             {
@@ -89,7 +89,7 @@ namespace PerditionGuardBot.commands
                     Title = "You are missing the following permission:",
                     Description = "Ban Members"
                 };
-                var LackPermsMessage = await ctx.Channel.SendMessageAsync(LackPermsEmbed);
+                var LackPermsMessage = await ctx.RespondAsync(LackPermsEmbed);
                 await Task.Delay(5000);
                 await LackPermsMessage.DeleteAsync();
             }
@@ -111,7 +111,7 @@ namespace PerditionGuardBot.commands
                     Title = $"{targetUser} Banned",
                     Description = $"By: {ctx.User.Username}, With reason: {OriginalReason}",
                 };
-                await ctx.Channel.SendMessageAsync(BannedEmbed);
+                await ctx.RespondAsync(BannedEmbed);
             }
             if (!ctx.Member.Permissions.HasPermission(Permissions.BanMembers))
             {
@@ -121,7 +121,7 @@ namespace PerditionGuardBot.commands
                     Title = "You are missing the following permission:",
                     Description = "Ban Members"
                 };
-                var LackPermsMessage = await ctx.Channel.SendMessageAsync(LackPermsEmbed);
+                var LackPermsMessage = await ctx.RespondAsync(LackPermsEmbed);
                 await Task.Delay(5000);
                 await LackPermsMessage.DeleteAsync();
             }
@@ -137,7 +137,9 @@ namespace PerditionGuardBot.commands
                     Title = "Missing Information",
                     Description = "You haven't provided a user to ban"
                 };
-                await ctx.Channel.SendMessageAsync(MissingInfoEmbed);
+                var MissingInfoMsg = await ctx.RespondAsync(MissingInfoEmbed);
+                await Task.Delay(5000);
+                await MissingInfoMsg.DeleteAsync();
             }
             if (!ctx.Member.Permissions.HasPermission(Permissions.BanMembers))
             {
@@ -147,7 +149,7 @@ namespace PerditionGuardBot.commands
                     Title = "You are missing the following permission:",
                     Description = "Ban Members"
                 };
-                var LackPermsMessage = await ctx.Channel.SendMessageAsync(LackPermsEmbed);
+                var LackPermsMessage = await ctx.RespondAsync(LackPermsEmbed);
                 await Task.Delay(5000);
                 await LackPermsMessage.DeleteAsync();
             }
@@ -174,7 +176,7 @@ namespace PerditionGuardBot.commands
                     Title = $"{targetUser} Unbanned",
                     Description = $"By: {ctx.User.Username}, With reason: {OriginalReason}",
                 };
-                await ctx.Channel.SendMessageAsync(UnbannedEmbed);
+                await ctx.RespondAsync(UnbannedEmbed);
             }
             if (!ctx.Member.Permissions.HasPermission(Permissions.BanMembers))
             {
@@ -184,7 +186,7 @@ namespace PerditionGuardBot.commands
                     Title = "You are missing the following permission:",
                     Description = "Ban Members"
                 };
-                var LackPermsMessage = await ctx.Channel.SendMessageAsync(LackPermsEmbed);
+                var LackPermsMessage = await ctx.RespondAsync(LackPermsEmbed);
                 await Task.Delay(5000);
                 await LackPermsMessage.DeleteAsync();
             }
@@ -200,7 +202,9 @@ namespace PerditionGuardBot.commands
                     Title = "Missing Information",
                     Description = "You haven't provided a user ID to unban"
                 };
-                await ctx.Channel.SendMessageAsync(MissingInfoEmbed);
+                var MissingInfoMsg = await ctx.RespondAsync(MissingInfoEmbed);
+                await Task.Delay(5000);
+                await MissingInfoMsg.DeleteAsync();
             }
             if (!ctx.Member.Permissions.HasPermission(Permissions.BanMembers))
             {
@@ -210,7 +214,7 @@ namespace PerditionGuardBot.commands
                     Title = "You are missing the following permission:",
                     Description = "Ban Members"
                 };
-                var LackPermsMessage = await ctx.Channel.SendMessageAsync(LackPermsEmbed);
+                var LackPermsMessage = await ctx.RespondAsync(LackPermsEmbed);
                 await Task.Delay(5000);
                 await LackPermsMessage.DeleteAsync();
             }
@@ -232,7 +236,9 @@ namespace PerditionGuardBot.commands
                     Color = Settings.GetPrimaryColor(),
                     Title = "Channel Locked",
                 };
-                await ctx.Channel.SendMessageAsync(LockEmbed);
+                var LockMsg = await ctx.RespondAsync(LockEmbed);
+                await Task.Delay(1000 * 60 * 60); // displays the message for 1 hour
+                await LockMsg.DeleteAsync();
             }
             if (!ctx.Member.Permissions.HasPermission(Permissions.ManageChannels))
             {
@@ -242,7 +248,7 @@ namespace PerditionGuardBot.commands
                     Title = "You are missing the following permission:",
                     Description = "Manage Channels"
                 };
-                var LackPermsMessage = await ctx.Channel.SendMessageAsync(LackPermsEmbed);
+                var LackPermsMessage = await ctx.RespondAsync(LackPermsEmbed);
                 await Task.Delay(5000);
                 await LackPermsMessage.DeleteAsync();
             }
@@ -259,7 +265,9 @@ namespace PerditionGuardBot.commands
                     Color = Settings.GetPrimaryColor(),
                     Title = "Channel Unlocked",
                 };
-                await ctx.Channel.SendMessageAsync(UnlockEmbed);
+                var UnlockMsg = await ctx.RespondAsync(UnlockEmbed);
+                await Task.Delay(1000 * 60 * 60); // displays the message for 1 hour
+                await UnlockMsg.DeleteAsync();
             }
             if (!ctx.Member.Permissions.HasPermission(Permissions.ManageChannels))
             {
@@ -269,7 +277,7 @@ namespace PerditionGuardBot.commands
                     Title = "You are missing the following permission:",
                     Description = "Manage Channels"
                 };
-                var LackPermsMessage = await ctx.Channel.SendMessageAsync(LackPermsEmbed);
+                var LackPermsMessage = await ctx.RespondAsync(LackPermsEmbed);
                 await Task.Delay(5000);
                 await LackPermsMessage.DeleteAsync();
             }
@@ -294,7 +302,7 @@ namespace PerditionGuardBot.commands
                             Color = Settings.GetPrimaryColor(),
                             Title = $"Removed {role.Name} from {targetUser.Username}",
                         };
-                        await ctx.Channel.SendMessageAsync(RoleRevokedEmbed);
+                        await ctx.RespondAsync(RoleRevokedEmbed);
                     }
                     else
                     {
@@ -304,7 +312,7 @@ namespace PerditionGuardBot.commands
                             Color = Settings.GetPrimaryColor(),
                             Title = $"Gave {role.Name} to {targetUser.Username}",
                         };
-                        await ctx.Channel.SendMessageAsync(RoleGrantedEmbed);
+                        await ctx.RespondAsync(RoleGrantedEmbed);
                     }
                 }
             }
@@ -316,7 +324,7 @@ namespace PerditionGuardBot.commands
                     Title = "You are missing the following permission:",
                     Description = "Manage Roles"
                 };
-                var LackPermsMessage = await ctx.Channel.SendMessageAsync(LackPermsEmbed);
+                var LackPermsMessage = await ctx.RespondAsync(LackPermsEmbed);
                 await Task.Delay(5000);
                 await LackPermsMessage.DeleteAsync();
             }
@@ -334,7 +342,9 @@ namespace PerditionGuardBot.commands
                     Title = "Missing Information",
                     Description = "You haven't provided a role ID"
                 };
-                await ctx.Channel.SendMessageAsync(MissingInfoEmbed);
+                var MissingInfoMsg = await ctx.RespondAsync(MissingInfoEmbed);
+                await Task.Delay(5000);
+                await MissingInfoMsg.DeleteAsync();
             }
             if (!ctx.Member.Permissions.HasPermission(Permissions.ManageRoles))
             {
@@ -344,7 +354,7 @@ namespace PerditionGuardBot.commands
                     Title = "You are missing the following permission:",
                     Description = "Manage Roles"
                 };
-                var LackPermsMessage = await ctx.Channel.SendMessageAsync(LackPermsEmbed);
+                var LackPermsMessage = await ctx.RespondAsync(LackPermsEmbed);
                 await Task.Delay(5000);
                 await LackPermsMessage.DeleteAsync();
             }
@@ -360,7 +370,9 @@ namespace PerditionGuardBot.commands
                     Title = "Missing Information",
                     Description = "You haven't provided a user or user ID\nMay be an invalid user."
                 };
-                await ctx.Channel.SendMessageAsync(MissingInfoEmbed);
+                var MissingInfoMsg = await ctx.RespondAsync(MissingInfoEmbed);
+                await Task.Delay(5000);
+                await MissingInfoMsg.DeleteAsync();
             }
             if (!ctx.Member.Permissions.HasPermission(Permissions.ManageRoles))
             {
@@ -370,7 +382,7 @@ namespace PerditionGuardBot.commands
                     Title = "You are missing the following permission:",
                     Description = "Manage Roles"
                 };
-                var LackPermsMessage = await ctx.Channel.SendMessageAsync(LackPermsEmbed);
+                var LackPermsMessage = await ctx.RespondAsync(LackPermsEmbed);
                 await Task.Delay(5000);
                 await LackPermsMessage.DeleteAsync();
             }

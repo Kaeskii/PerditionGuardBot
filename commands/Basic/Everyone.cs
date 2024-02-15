@@ -1,7 +1,9 @@
 ﻿using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
+using DSharpPlus.Entities;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -24,6 +26,37 @@ namespace PerditionGuardBot.commands.Basic
         {
             var ping = ctx.Client.Ping;
             await ctx.RespondAsync("Pong! : " + ping);
+        }
+        [Command("whois")]
+        public async Task Whois(CommandContext ctx)
+        {
+            var WhoisEmbed = new DiscordMessageBuilder().AddEmbed(new DiscordEmbedBuilder()
+                .WithColor(Settings.GetPrimaryColor())
+                .WithThumbnail(ctx.User.AvatarUrl)
+                .WithTitle(ctx.User.Username)
+                .AddField("Join Date:", ctx.Member.JoinedAt.ToString(), true)
+                .AddField("Account Created:", ctx.User.CreationTimestamp.ToString(), true)
+                .AddField("Permissions:", ctx.Member.Permissions.ToString(), false)
+                );
+            await ctx.RespondAsync(WhoisEmbed);
+        }
+        [Command("avatar")]
+        [Aliases("av")]
+        public async Task Avatar(CommandContext ctx)
+        {
+            var AvatarEmbed = new DiscordEmbedBuilder
+            {
+                Color = Settings.GetPrimaryColor(),
+                Title = "Avatar",
+                ImageUrl = ctx.User.AvatarUrl
+            };
+            await ctx.RespondAsync(embed: AvatarEmbed);
+        }
+        [Command("serverinfo")]
+        [Aliases("si")]
+        public async Task ServerInfo(CommandContext ctx)
+        {
+            await ctx.RespondAsync("This command is not yet implemented.");
         }
     }
 }

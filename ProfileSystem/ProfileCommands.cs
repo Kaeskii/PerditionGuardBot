@@ -59,8 +59,8 @@ namespace PerditionGuardBot.commands
                         .WithTitle($"{UserProfile.UserName};s Profile")
                         .WithThumbnail(UserProfile.AvatarURL)
                         .AddField("Level", UserProfile.Level.ToString(), true)
-                        .AddField("XP", xpoutofstring, false)
-                        .AddField("Hive Cheater", Cheater, true)
+                        .AddField("XP", xpoutofstring, true)
+                        .AddField("Hive Cheater", Cheater, false)
                         .AddField("Boosting", UserProfile.IsBooster.ToString(), false)
                         );
                     await ctx.RespondAsync(ProfileEmbed);
@@ -82,8 +82,8 @@ namespace PerditionGuardBot.commands
                     .WithTitle($"{UserProfile.UserName};s Profile")
                     .WithThumbnail(UserProfile.AvatarURL)
                     .AddField("Level", UserProfile.Level.ToString(), true)
-                    .AddField("XP", UserProfile.XP.ToString(), false)
-                    .AddField("Hive Cheater", Cheater, true)
+                    .AddField("XP", UserProfile.XP.ToString(), true)
+                    .AddField("Hive Cheater", Cheater, false)
                     .AddField("Boosting", UserProfile.IsBooster.ToString(), false)
                     );
                 await ctx.RespondAsync(ProfileEmbed);

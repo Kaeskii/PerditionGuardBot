@@ -32,13 +32,13 @@ namespace PerditionGuardBot.commands
         [Command("modtest")]
         public async Task Test(CommandContext ctx)
         {
-            await ctx.Channel.SendMessageAsync($"Testing mod functions\nping: {ctx.Client.Ping}"); // displays testing messgae and sends current ping for each response etc
+            await ctx.RespondAsync($"Testing mod functions\nping: {ctx.Client.Ping}"); // displays testing messgae and sends current ping for each response etc
             if (ctx.Member.Permissions.HasPermission(Permissions.KickMembers))
             {
-                await ctx.Channel.SendMessageAsync("true");
+                await ctx.RespondAsync("true");
             }
             else
-                await ctx.Channel.SendMessageAsync("false");
+                await ctx.RespondAsync("false");
         }
 
 
@@ -62,7 +62,7 @@ namespace PerditionGuardBot.commands
                     Title = $"{targetUser.Username} Kicked",
                     Description = $"By: {ctx.User.Username}, With reason: {OriginalReason}",
                 };
-                await ctx.Channel.SendMessageAsync(KickedEmbed);
+                await ctx.RespondAsync(KickedEmbed);
             }
             if (!ctx.Member.Permissions.HasPermission(Permissions.KickMembers))
             {
@@ -72,7 +72,7 @@ namespace PerditionGuardBot.commands
                     Title = "You are missing the following permission:",
                     Description = "Kick Members"
                 };
-                var LackPermsMessage = await ctx.Channel.SendMessageAsync(LackPermsEmbed);
+                var LackPermsMessage = await ctx.RespondAsync(LackPermsEmbed);
                 await Task.Delay(5000);
                 await LackPermsMessage.DeleteAsync();
             }
@@ -88,7 +88,7 @@ namespace PerditionGuardBot.commands
                     Title = "Missing Information",
                     Description = "You haven't provided a user to kick"
                 };
-                await ctx.Channel.SendMessageAsync(MissingInfoEmbed);
+                await ctx.RespondAsync(MissingInfoEmbed);
             }
             if (!ctx.Member.Permissions.HasPermission(Permissions.KickMembers))
             {
@@ -98,7 +98,7 @@ namespace PerditionGuardBot.commands
                     Title = "You are missing the following permission:",
                     Description = "Kick Members"
                 };
-                var LackPermsMessage = await ctx.Channel.SendMessageAsync(LackPermsEmbed);
+                var LackPermsMessage = await ctx.RespondAsync(LackPermsEmbed);
                 await Task.Delay(5000);
                 await LackPermsMessage.DeleteAsync();
             }
@@ -117,7 +117,7 @@ namespace PerditionGuardBot.commands
                 IEnumerable<DiscordMessage> messages = await ctx.Channel.GetMessagesAsync(amount);
                 var FilteredMessages = messages.Where(x => (DateTimeOffset.UtcNow - x.Timestamp).TotalDays <= 14);
                 await ctx.Channel.DeleteMessagesAsync(FilteredMessages);
-                DiscordMessage Message = await ctx.Channel.SendMessageAsync($"{amount} messages deleted");
+                DiscordMessage Message = await ctx.RespondAsync($"{amount} messages deleted");
                 await Task.Delay(3000);
                 await ctx.Channel.DeleteMessageAsync(Message);
             }
@@ -129,7 +129,7 @@ namespace PerditionGuardBot.commands
                     Title = "You are missing the following permission:",
                     Description = "Manage Messages"
                 };
-                var LackPermsMessage = await ctx.Channel.SendMessageAsync(LackPermsEmbed);
+                var LackPermsMessage = await ctx.RespondAsync(LackPermsEmbed);
                 await Task.Delay(5000);
                 await LackPermsMessage.DeleteAsync();
             }
@@ -140,7 +140,7 @@ namespace PerditionGuardBot.commands
             await ctx.Message.DeleteAsync();
             if (ctx.Member.Permissions.HasPermission(Permissions.ManageMessages))
             {
-                await ctx.Channel.SendMessageAsync("Please use the slash command as this does not work (yet?)");
+                await ctx.RespondAsync("Please use the slash command as this does not work (yet?)");
             }
             if (!ctx.Member.Permissions.HasPermission(Permissions.ManageMessages))
             {
@@ -150,7 +150,7 @@ namespace PerditionGuardBot.commands
                     Title = "You are missing the following permission:",
                     Description = "Manage Messages"
                 };
-                var LackPermsMessage = await ctx.Channel.SendMessageAsync(LackPermsEmbed);
+                var LackPermsMessage = await ctx.RespondAsync(LackPermsEmbed);
                 await Task.Delay(5000);
                 await LackPermsMessage.DeleteAsync();
             }
@@ -161,7 +161,7 @@ namespace PerditionGuardBot.commands
             await ctx.Message.DeleteAsync();
             if (ctx.Member.Permissions.HasPermission(Permissions.ManageMessages))
             {
-                await ctx.Channel.SendMessageAsync("Please use the slash command as this does not work (yet?)");
+                await ctx.RespondAsync("Please use the slash command as this does not work (yet?)");
             }
             if (!ctx.Member.Permissions.HasPermission(Permissions.ManageMessages))
             {
@@ -171,7 +171,7 @@ namespace PerditionGuardBot.commands
                     Title = "You are missing the following permission:",
                     Description = "Manage Messages"
                 };
-                var LackPermsMessage = await ctx.Channel.SendMessageAsync(LackPermsEmbed);
+                var LackPermsMessage = await ctx.RespondAsync(LackPermsEmbed);
                 await Task.Delay(5000);
                 await LackPermsMessage.DeleteAsync();
             }
@@ -191,7 +191,7 @@ namespace PerditionGuardBot.commands
                     Title = "Muted Role Set",
                     Description = $"The muted role has been set to {roleToSet.Name}"
                 };
-                await ctx.Channel.SendMessageAsync(MuteRoleSetEmbed);
+                await ctx.RespondAsync(MuteRoleSetEmbed);
             }
             if (!ctx.Member.Permissions.HasPermission(Permissions.ManageRoles))
             {
@@ -201,7 +201,7 @@ namespace PerditionGuardBot.commands
                     Title = "You are missing the following permission:",
                     Description = "Manage Roles"
                 };
-                var LackPermsMessage = await ctx.Channel.SendMessageAsync(LackPermsEmbed);
+                var LackPermsMessage = await ctx.RespondAsync(LackPermsEmbed);
                 await Task.Delay(5000);
                 await LackPermsMessage.DeleteAsync();
             }
@@ -230,7 +230,7 @@ namespace PerditionGuardBot.commands
                         Title = $"{targetUser.Username} Muted",
                         Description = $"By: {ctx.User.Username}, With reason: {OriginalReason}, For: {seconds} second(s)",
                     };
-                    await ctx.Channel.SendMessageAsync(MutedEmbed);
+                    await ctx.RespondAsync(MutedEmbed);
                     await Task.Delay(seconds * 1000);
                     await targetUser.RevokeRoleAsync(MutedRole);
                 }
@@ -245,7 +245,7 @@ namespace PerditionGuardBot.commands
                         Title = $"{targetUser.Username} Muted",
                         Description = $"By: {ctx.User.Username}, With reason: {OriginalReason}, For: {minutes} minute(s)",
                     };
-                    await ctx.Channel.SendMessageAsync(MutedEmbed);
+                    await ctx.RespondAsync(MutedEmbed);
                     await Task.Delay(minutes * 60000);
                     await targetUser.RevokeRoleAsync(MutedRole);
                 }
@@ -260,7 +260,7 @@ namespace PerditionGuardBot.commands
                         Title = $"{targetUser.Username} Muted",
                         Description = $"By: {ctx.User.Username}, With reason: {OriginalReason}, For: {hours} hour(s)",
                     };
-                    await ctx.Channel.SendMessageAsync(MutedEmbed);
+                    await ctx.RespondAsync(MutedEmbed);
                     await Task.Delay(hours * 3600000);
                     await targetUser.RevokeRoleAsync(MutedRole);
                 }
@@ -275,7 +275,7 @@ namespace PerditionGuardBot.commands
                         Title = $"{targetUser.Username} Muted",
                         Description = $"By: {ctx.User.Username}, With reason: {OriginalReason}, For: {days} day(s)",
                     };
-                    await ctx.Channel.SendMessageAsync(MutedEmbed);
+                    await ctx.RespondAsync(MutedEmbed);
                     await Task.Delay(days * 86400000);
                     await targetUser.RevokeRoleAsync(MutedRole);
                 }
@@ -290,7 +290,7 @@ namespace PerditionGuardBot.commands
                         Title = $"{targetUser.Username} Muted",
                         Description = $"By: {ctx.User.Username}, With reason: {OriginalReason}, For: {months} month(s)",
                     };
-                    await ctx.Channel.SendMessageAsync(MutedEmbed);
+                    await ctx.RespondAsync(MutedEmbed);
                     await Task.Delay((int)(months * 2592000000));
                     await targetUser.RevokeRoleAsync(MutedRole);
                 }
@@ -302,7 +302,7 @@ namespace PerditionGuardBot.commands
                         Title = $"Too long",
                         Description = $"The most likely scenario will be that this bot is not up for longer than a month at a time unless hosted somewhere 24/7 but even then very unlikely and due to the way that the bot is set up the bot does not store the mute information after the bot deactivates and therefore does not continue the task.",
                     };
-                    await ctx.Channel.SendMessageAsync(TooLongEmbed);
+                    await ctx.RespondAsync(TooLongEmbed);
                 }   
             }
             if (!ctx.Member.Permissions.HasPermission(Permissions.ManageRoles))
@@ -313,7 +313,7 @@ namespace PerditionGuardBot.commands
                     Title = "You are missing the following permission:",
                     Description = "Manage Roles"
                 };
-                var LackPermsMessage = await ctx.Channel.SendMessageAsync(LackPermsEmbed);
+                var LackPermsMessage = await ctx.RespondAsync(LackPermsEmbed);
                 await Task.Delay(5000);
                 await LackPermsMessage.DeleteAsync();
             }
@@ -329,7 +329,7 @@ namespace PerditionGuardBot.commands
                     Title = "No Muted Role or no duration set",
                     Description = "If there is no role set please use the setmuterole command or use the duration format (s,m,h,d,m)"
                 };
-                await ctx.Channel.SendMessageAsync(NoMutedRoleEmbed);
+                await ctx.RespondAsync(NoMutedRoleEmbed);
             }
             if (!ctx.Member.Permissions.HasPermission(Permissions.ManageRoles))
             {
@@ -339,7 +339,7 @@ namespace PerditionGuardBot.commands
                     Title = "You are missing the following permission:",
                     Description = "Manage Roles"
                 };
-                var LackPermsMessage = await ctx.Channel.SendMessageAsync(LackPermsEmbed);
+                var LackPermsMessage = await ctx.RespondAsync(LackPermsEmbed);
                 await Task.Delay(5000);
                 await LackPermsMessage.DeleteAsync();
             }

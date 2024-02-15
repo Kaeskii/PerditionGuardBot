@@ -45,7 +45,7 @@ namespace PerditionGuardBot.commands
                     Title = "You are missing the following permission:",
                     Description = "Manage Channels"
                 };
-                var LackPermsMessage = await ctx.Channel.SendMessageAsync(LackPermsEmbed);
+                var LackPermsMessage = await ctx.RespondAsync(LackPermsEmbed);
                 await Task.Delay(5000);
                 await LackPermsMessage.DeleteAsync();
             }
@@ -63,7 +63,7 @@ namespace PerditionGuardBot.commands
                         .WithTitle("Ticket Dashboard")
                         .WithDescription("Select an option:"))
                     .AddComponents(viewButton, deleteButton);
-                await ctx.Channel.SendMessageAsync(dashboard);
+                await ctx.RespondAsync(dashboard);
             }
             else
             {
@@ -73,7 +73,7 @@ namespace PerditionGuardBot.commands
                     Title = "You are missing the following permission:",
                     Description = "Manage Channels"
                 };
-                var LackPermsMessage = await ctx.Channel.SendMessageAsync(LackPermsEmbed);
+                var LackPermsMessage = await ctx.RespondAsync(LackPermsEmbed);
                 await Task.Delay(5000);
                 await LackPermsMessage.DeleteAsync();
             }
@@ -96,7 +96,7 @@ namespace PerditionGuardBot.commands
                 FileStream file = new FileStream(@"C:\Users\Kayla\source\repos\PerditionGuardCode\bin\Debug\output.txt", FileMode.Open, FileAccess.Read);
                 DiscordMessageBuilder builder = new DiscordMessageBuilder();
                 builder.AddFile(file);
-                await ctx.Channel.SendMessageAsync(builder); // testing (doesn't work)
+                await ctx.RespondAsync(builder); // testing (doesn't work)
             }
             else
             {
@@ -106,7 +106,7 @@ namespace PerditionGuardBot.commands
                     Title = "You are missing the following permission:",
                     Description = "Manage Channels"
                 };
-                var LackPermsMessage = await ctx.Channel.SendMessageAsync(LackPermsEmbed);
+                var LackPermsMessage = await ctx.RespondAsync(LackPermsEmbed);
                 await Task.Delay(5000);
                 await LackPermsMessage.DeleteAsync();
             }
