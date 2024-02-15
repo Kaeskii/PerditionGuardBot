@@ -1,4 +1,4 @@
-﻿{ // editing this file does fuck all you gotta go to your seperate file in the operations folder
+﻿{ // editing this file does nothing. you gotta go to your seperate file in the debug folder
     "token": "token", 
     "prefix": "p."
 }
