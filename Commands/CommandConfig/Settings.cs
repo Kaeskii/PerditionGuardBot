@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PerditionGuardBot.commands
+namespace PerditionGuardBot.Commands
 {
     public class Settings // for all the frequently used settings that may want to be changed for customization.
     {

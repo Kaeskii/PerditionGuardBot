@@ -4,7 +4,7 @@ using DSharpPlus.Entities;
 using DSharpPlus.Interactivity.Extensions;
 using System.Threading.Tasks;
 
-namespace PerditionGuardBot.commands
+namespace PerditionGuardBot.Commands
 {
     public class TestCommands : BaseCommandModule
     {

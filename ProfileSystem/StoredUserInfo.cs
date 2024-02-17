@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PerditionGuardBot.commands
+namespace PerditionGuardBot.Commands
 {
     public class StoredUserInfo
     {

@@ -13,14 +13,14 @@ using DSharpPlus.CommandsNext.Converters;
 using System.Security.Cryptography.X509Certificates;
 using System.Runtime.InteropServices;
 
-namespace PerditionGuardBot.commands
+namespace PerditionGuardBot.Commands
 {
-    public class Administration : BaseCommandModule // ban commands and whatnot, add embeds once the commands are somewhat done
+    public class Administration : BaseCommandModule // ban Commands and whatnot, add embeds once the Commands are somewhat done
     {
         // Administration Command List
         //
         // 1: ban Commands (working) (not implimented a tracking method)
-        // 1.5: tempban (not started) (could bug out with other commands but I think it's probably fixable) (start after other commands) (before profiles) - had a shot but i'm going to need to store the time length elsewhere and also store multiple users for temp bans or something etc
+        // 1.5: tempban (not started) (could bug out with other Commands but I think it's probably fixable) (start after other Commands) (before profiles) - had a shot but i'm going to need to store the time length elsewhere and also store multiple users for temp bans or something etc
         // 2: unban Commands (working)
         // 3: lock (working)
         // 4: unlock (working)
@@ -39,7 +39,7 @@ namespace PerditionGuardBot.commands
                 {
                     Color = Settings.GetPrimaryColor(),
                     Title = "Embeds are white",
-                    Description = $"The color name is displayed as: {Settings.GetNameOfColor()}"
+                    Description = $"The color name is displayed as: {Settings.GetPrimaryColor()}"
                 };
                 await ctx.RespondAsync(adminEmbedTest);
             }
@@ -59,7 +59,7 @@ namespace PerditionGuardBot.commands
         }
 
 
-        // ban commands
+        // ban Commands
 
 
         [Command("ban")] // using the parameter discord member causes the command to be a totally different function requiring that to even run.
@@ -126,7 +126,7 @@ namespace PerditionGuardBot.commands
                 await LackPermsMessage.DeleteAsync();
             }
         }
-        [Command("ban")] // this command catches the original commands but provides a reason for the command not running
+        [Command("ban")] // this command catches the original Commands but provides a reason for the command not running
         public async Task BanCatch(CommandContext ctx) // this makes it so the command runs even if they add anything after the command
         {
             if (ctx.Member.Permissions.HasPermission(Permissions.BanMembers))
@@ -156,7 +156,7 @@ namespace PerditionGuardBot.commands
         }
 
 
-        // unban commands
+        // unban Commands
 
 
         [Command("unban")] // very similar to the ban command
@@ -221,7 +221,7 @@ namespace PerditionGuardBot.commands
         }
 
 
-        // lock commands
+        // lock Commands
 
 
         [Command("lock")]

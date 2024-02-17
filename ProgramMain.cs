@@ -4,9 +4,9 @@ using DSharpPlus.Entities;
 using DSharpPlus.EventArgs;
 using DSharpPlus.Interactivity;
 using DSharpPlus.Interactivity.Extensions;
-using PerditionGuardBot.commands;
-using PerditionGuardBot.commands.Basic;
-using PerditionGuardBot.commands.ProfileSystem;
+using PerditionGuardBot.Commands;
+using PerditionGuardBot.Commands.Basic;
+using PerditionGuardBot.Commands.ProfileSystem;
 using PerditionGuardBot.config;
 using PerditionGuardBot.TicketsSystem;
 using System;
@@ -21,7 +21,7 @@ namespace PerditionGuardBot
     internal class ProgramMain
     {
         // Notes:
-        // I want all the permission related commands to send me a seperate DM with the user's name and the command they used. This makes an easy way to track who is using the bot and what they are doing with it.
+        // I want all the permission related Commands to send me a seperate DM with the user's name and the command they used. This makes an easy way to track who is using the bot and what they are doing with it.
         // It also prevents missuse of the bot.
         //
         //
@@ -31,18 +31,18 @@ namespace PerditionGuardBot
         //
         public static DiscordClient? Client { get; set; }
 
-        private static CommandsNextExtension commands;
+        private static CommandsNextExtension Commands;
 
-        // this if for the commands properties
+        // this if for the Commands properties
         public static CommandsNextExtension GetCommands()
         {
-            return commands;
+            return Commands;
         }
 
-        // this if for the commands properties
+        // this if for the Commands properties
         public static void SetCommands(CommandsNextExtension value)
         {
-            commands = value;
+            Commands = value;
         }
 
         public static LoggingSystem? logger;
@@ -83,7 +83,7 @@ namespace PerditionGuardBot
             // (end of event handle area)
             // The bot sets up properly here
 
-            var commandsConfig = new CommandsNextConfiguration()
+            var CommandsConfig = new CommandsNextConfiguration()
             {
                 StringPrefixes = new string[] { jsonReader.Prefix },
                 EnableMentionPrefix = true,
@@ -92,21 +92,21 @@ namespace PerditionGuardBot
                 QuotationMarks = "" // if anything breaks it's this (command wise)
             };
 
-            SetCommands(Client.UseCommandsNext(commandsConfig));
-            // for all the test commands
+            SetCommands(Client.UseCommandsNext(CommandsConfig));
+            // for all the test Commands
             GetCommands().RegisterCommands<TestCommands>();
             // registering other command areas
             GetCommands().RegisterCommands<Administration>();
             GetCommands().RegisterCommands<Moderation>();
-            GetCommands().RegisterCommands<Tickets>();
-            // prefix commands and server settings
+            GetCommands().RegisterCommands<TicketCommands>();
+            // prefix Commands and server settings
             GetCommands().RegisterCommands<Configuration>();
             GetCommands().RegisterCommands<Everyone>();
 
             await Client.ConnectAsync();
             await Task.Delay(-1);
         }
-        // use arg here instead of ctx because these ARE NOT COMMANDS they are EVENTS
+        // use arg here instead of ctx because these ARE NOT Commands they are EVENTS
         private static async Task VoiceChannelHandling(DiscordClient send, VoiceStateUpdateEventArgs? arg) // vc events
         {
             await Task.CompletedTask;
@@ -317,7 +317,7 @@ namespace PerditionGuardBot
 
         private static Task Client_Ready(DiscordClient sender, DSharpPlus.EventArgs.ReadyEventArgs args) // runs after everything had loaded which actually starts the bot usually takes less than a second
         {
-            return Task.CompletedTask; // reports when tasks have been completed in the console (commands)
+            return Task.CompletedTask; // reports when tasks have been completed in the console (Commands)
         }
     }
 }

@@ -2,6 +2,7 @@
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
+using DSharpPlus.Interactivity.Extensions;
 using PerditionGuardBot.TicketsSystem;
 using System;
 using System.Collections.Generic;
@@ -10,9 +11,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PerditionGuardBot.commands
+namespace PerditionGuardBot.Commands
 {
-    public class Tickets : BaseCommandModule
+    public class TicketCommands : BaseCommandModule
     {
         // Ticket Command List
         //
@@ -94,9 +95,8 @@ namespace PerditionGuardBot.commands
                     }
                 }
                 FileStream file = new FileStream(@"C:\Users\Kayla\source\repos\PerditionGuardCode\bin\Debug\output.txt", FileMode.Open, FileAccess.Read);
-                DiscordMessageBuilder builder = new DiscordMessageBuilder();
-                builder.AddFile(file);
-                await ctx.RespondAsync(builder); // testing (doesn't work)
+                var fileMessage = new DiscordWebhookBuilder().AddFile("output.txt", file);
+                await ctx.RespondAsync(fileMessage.ToString());
             }
             else
             {

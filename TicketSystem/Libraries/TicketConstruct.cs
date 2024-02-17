@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using PerditionGuardBot.commands;
+using PerditionGuardBot.Commands;
 using System;
 using System.Collections.Generic;
 using System.IO;

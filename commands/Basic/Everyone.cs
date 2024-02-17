@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PerditionGuardBot.commands.Basic
+namespace PerditionGuardBot.Commands.Basic
 {
     public class Everyone : BaseCommandModule
     {

@@ -12,7 +12,7 @@ using DSharpPlus.CommandsNext.Converters;
 using System.Runtime.InteropServices;
 using System.Threading.Channels;
 
-namespace PerditionGuardBot.commands
+namespace PerditionGuardBot.Commands
 {
     public class Moderation : BaseCommandModule // for the lower level commands such as kick mute timeout etc (don;t forget to add the asylum
     {

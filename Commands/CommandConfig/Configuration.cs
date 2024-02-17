@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using DSharpPlus;
 using DSharpPlus.Entities;
 
-namespace PerditionGuardBot.commands
+namespace PerditionGuardBot.Commands
 {
     public class Configuration : BaseCommandModule // idk if i'll need to change this for theses commands yet
     {
