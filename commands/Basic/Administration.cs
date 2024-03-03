@@ -25,6 +25,7 @@ namespace PerditionGuardBot.Commands
         // 3: lock (working)
         // 4: unlock (working)
         // 5: role (working)
+        // 6: createrole (working) mainly to create fast boost roles
         //
         // End
 
@@ -284,7 +285,7 @@ namespace PerditionGuardBot.Commands
         }
 
 
-        // role
+        // role Commands
 
 
         [Command("role")]
@@ -340,7 +341,7 @@ namespace PerditionGuardBot.Commands
                 {
                     Color = DiscordColor.Red,
                     Title = "Missing Information",
-                    Description = "You haven't provided a role ID"
+                    Description = "You haven't provided a role ID\np.role <user mention/id> <role mention/id>"
                 };
                 var MissingInfoMsg = await ctx.RespondAsync(MissingInfoEmbed);
                 await Task.Delay(5000);
@@ -368,7 +369,77 @@ namespace PerditionGuardBot.Commands
                 {
                     Color = DiscordColor.Red,
                     Title = "Missing Information",
-                    Description = "You haven't provided a user or user ID\nMay be an invalid user."
+                    Description = "You haven't provided a user or user ID\nMay be an invalid user.\np.role <user mention/id> <role mention/id>"
+                };
+                var MissingInfoMsg = await ctx.RespondAsync(MissingInfoEmbed);
+                await Task.Delay(5000);
+                await MissingInfoMsg.DeleteAsync();
+            }
+            if (!ctx.Member.Permissions.HasPermission(Permissions.ManageRoles))
+            {
+                var LackPermsEmbed = new DiscordEmbedBuilder()
+                {
+                    Color = DiscordColor.Red,
+                    Title = "You are missing the following permission:",
+                    Description = "Manage Roles"
+                };
+                var LackPermsMessage = await ctx.RespondAsync(LackPermsEmbed);
+                await Task.Delay(5000);
+                await LackPermsMessage.DeleteAsync();
+            }
+        }
+
+        // createrole Commands
+
+
+        [Command("createrole")]
+        [Aliases("cr")]
+        public async Task CreateRole(CommandContext ctx, string roleName, string hexcode, [Optional] DiscordMember targetUser)
+        {
+            if (ctx.Member.Permissions.HasPermission(Permissions.ManageRoles))
+            {
+                if (roleName != null)
+                {
+                    var newRole = await ctx.Guild.CreateRoleAsync(roleName);
+                    await newRole.ModifyAsync(x => x.Color = new DiscordColor(hexcode));
+                    string desc = $"With colour {hexcode}";
+                    if (targetUser != null)
+                    {
+                        await targetUser.GrantRoleAsync(newRole);
+                        desc += $"\nGiven to {targetUser.Username}";
+                    }
+                    var RoleCreatedEmbed = new DiscordEmbedBuilder()
+                    {
+                        Color = new DiscordColor(hexcode),
+                        Title = $"Role {roleName} created",
+                        Description = $"{desc}"
+                    };
+                    await ctx.RespondAsync(RoleCreatedEmbed);
+                }
+            }
+            if (!ctx.Member.Permissions.HasPermission(Permissions.ManageRoles))
+            {
+                var LackPermsEmbed = new DiscordEmbedBuilder()
+                {
+                    Color = DiscordColor.Red,
+                    Title = "You are missing the following permission:",
+                    Description = "Manage Roles"
+                };
+                var LackPermsMessage = await ctx.RespondAsync(LackPermsEmbed);
+                await Task.Delay(5000);
+                await LackPermsMessage.DeleteAsync();
+            }
+        }
+        [Command("createrole")]
+        public async Task CreateRoleCatch(CommandContext ctx)
+        {
+            if (ctx.Member.Permissions.HasPermission(Permissions.ManageRoles))
+            {
+                var MissingInfoEmbed = new DiscordEmbedBuilder()
+                {
+                    Color = DiscordColor.Red,
+                    Title = "Missing Information",
+                    Description = "You haven't provided a role name or hexcode \np.cr <role name> <color hex> <[optional] usermention>"
                 };
                 var MissingInfoMsg = await ctx.RespondAsync(MissingInfoEmbed);
                 await Task.Delay(5000);
