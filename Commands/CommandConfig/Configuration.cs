@@ -39,6 +39,7 @@ namespace PerditionGuardBot.Commands
             await ctx.Channel.SendMessageAsync($"Testing Configurations\n{ctx.Client.Ping}"); // displays testing messgae and sends current ping for each response etc
             if (ctx.Member.Permissions.HasPermission(Permissions.ManageGuild))
             {
+                await ctx.Message.DeleteAsync();
                 await ctx.RespondAsync("true");
             }
             else
@@ -54,6 +55,7 @@ namespace PerditionGuardBot.Commands
         {
             if (ctx.Member.Id == 514141397960359970 || ctx.Member.Id == 596553233024155679)
             {
+                await ctx.Message.DeleteAsync();
                 var message = await ctx.RespondAsync("Shutting down in 3 seconds");
                 await Task.Delay(2500);
                 await message.DeleteAsync();

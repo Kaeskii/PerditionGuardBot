@@ -24,6 +24,7 @@ namespace PerditionGuardBot.Commands
         // 4: nick (not started)
         // 5: purge (working) (slash commands are taking over this one since it's hard to make it outside of a slash command.)
         // 6: cleanup (part of the purge slash commands.)
+        // 6.5: setmuterole (working) (embedded)
         // 7: mute (asylum) (working) (dm the user - make toggleable) (embedded)
         // 8: unmute (asylum) (not started)
         //
@@ -50,6 +51,7 @@ namespace PerditionGuardBot.Commands
         {
             if (ctx.Member.Permissions.HasPermission(Permissions.KickMembers))
             {
+                await ctx.Message.DeleteAsync();
                 string OriginalReason = reason;
                 if (reason == null)
                     reason = "Not specified by " + ctx.User.Username;
@@ -82,6 +84,7 @@ namespace PerditionGuardBot.Commands
         {
             if (ctx.Member.Permissions.HasPermission(Permissions.KickMembers))
             {
+                await ctx.Message.DeleteAsync();
                 var MissingInfoEmbed = new DiscordEmbedBuilder()
                 {
                     Color = DiscordColor.Red,
@@ -114,6 +117,7 @@ namespace PerditionGuardBot.Commands
             await ctx.Message.DeleteAsync();
             if (ctx.Member.Permissions.HasPermission(Permissions.ManageMessages))
             {
+                await ctx.Message.DeleteAsync();
                 IEnumerable<DiscordMessage> messages = await ctx.Channel.GetMessagesAsync(amount);
                 var FilteredMessages = messages.Where(x => (DateTimeOffset.UtcNow - x.Timestamp).TotalDays <= 14);
                 await ctx.Channel.DeleteMessagesAsync(FilteredMessages);
@@ -140,6 +144,7 @@ namespace PerditionGuardBot.Commands
             await ctx.Message.DeleteAsync();
             if (ctx.Member.Permissions.HasPermission(Permissions.ManageMessages))
             {
+                await ctx.Message.DeleteAsync();
                 await ctx.RespondAsync("Please use the slash command as this does not work (yet?)");
             }
             if (!ctx.Member.Permissions.HasPermission(Permissions.ManageMessages))
@@ -161,6 +166,7 @@ namespace PerditionGuardBot.Commands
             await ctx.Message.DeleteAsync();
             if (ctx.Member.Permissions.HasPermission(Permissions.ManageMessages))
             {
+                await ctx.Message.DeleteAsync();
                 await ctx.RespondAsync("Please use the slash command as this does not work (yet?)");
             }
             if (!ctx.Member.Permissions.HasPermission(Permissions.ManageMessages))
@@ -178,12 +184,15 @@ namespace PerditionGuardBot.Commands
         }
 
 
-        // mute commands
+        // setmuterole commands
+
+
         [Command("setmuterole")]
-        public async Task SetMuteRole(CommandContext ctx, DiscordRole roleToSet)
+        public async Task setMuteRole(CommandContext ctx, DiscordRole roleToSet)
         {
             if (ctx.Member.Permissions.HasPermission(Permissions.ManageRoles))
             {
+                await ctx.Message.DeleteAsync();
                 Settings.SetMutedRole(roleToSet.Id);
                 var MuteRoleSetEmbed = new DiscordEmbedBuilder()
                 {
@@ -207,11 +216,16 @@ namespace PerditionGuardBot.Commands
             }
         }
 
+
+        // mute Commands
+
+
         [Command("mute")]
         public async Task Mute(CommandContext ctx, DiscordMember targetUser, string duration, [RemainingText] string reason)
         {
             if (ctx.Member.Permissions.HasPermission(Permissions.ManageRoles))
             {
+                await ctx.Message.DeleteAsync();
                 string OriginalReason = reason;
                 DiscordRole MutedRole = ctx.Guild.GetRole(Settings.GetMutedRole(ctx.Guild.Id));
                 if (reason == null)
@@ -278,22 +292,7 @@ namespace PerditionGuardBot.Commands
                     await ctx.RespondAsync(MutedEmbed);
                     await Task.Delay(days * 86400000);
                     await targetUser.RevokeRoleAsync(MutedRole);
-                }
-                if (duration.Contains("m"))
-                {
-                    duration = duration.Replace("m", "");
-                    int months = int.Parse(duration);
-                    await targetUser.GrantRoleAsync(MutedRole);
-                    var MutedEmbed = new DiscordEmbedBuilder()
-                    {
-                        Color = Settings.GetPrimaryColor(),
-                        Title = $"{targetUser.Username} Muted",
-                        Description = $"By: {ctx.User.Username}, With reason: {OriginalReason}, For: {months} month(s)",
-                    };
-                    await ctx.RespondAsync(MutedEmbed);
-                    await Task.Delay((int)(months * 2592000000));
-                    await targetUser.RevokeRoleAsync(MutedRole);
-                }
+                } // originally had a duplicate m for months however that would cause problems with the minutes and therefore was removed
                 if (duration.Contains("y"))
                 {
                     var TooLongEmbed = new DiscordEmbedBuilder()
@@ -323,13 +322,108 @@ namespace PerditionGuardBot.Commands
         {
             if (ctx.Member.Permissions.HasPermission(Permissions.ManageRoles))
             {
+                await ctx.Message.DeleteAsync();
                 var NoMutedRoleEmbed = new DiscordEmbedBuilder()
                 {
                     Color = DiscordColor.Red,
                     Title = "No Muted Role or no duration set",
-                    Description = "If there is no role set please use the setmuterole command or use the duration format (s,m,h,d,m)"
+                    Description = "If there is no role set please use the setmuterole command or use the duration format (s,m,h,d,y)"
                 };
                 await ctx.RespondAsync(NoMutedRoleEmbed);
+            }
+            if (!ctx.Member.Permissions.HasPermission(Permissions.ManageRoles))
+            {
+                var LackPermsEmbed = new DiscordEmbedBuilder()
+                {
+                    Color = DiscordColor.Red,
+                    Title = "You are missing the following permission:",
+                    Description = "Manage Roles"
+                };
+                var LackPermsMessage = await ctx.RespondAsync(LackPermsEmbed);
+                await Task.Delay(5000);
+                await LackPermsMessage.DeleteAsync();
+            }
+        }
+
+
+        // unmute Commands
+
+
+        [Command("unmute")]
+        public async Task unmute(CommandContext ctx, DiscordMember targetUser)
+        {
+            DiscordRole MutedRole = ctx.Guild.GetRole(Settings.GetMutedRole(ctx.Guild.Id));
+            if (ctx.Member.Permissions.HasPermission(Permissions.ManageRoles))
+            {
+                await ctx.Message.DeleteAsync();
+                if (targetUser.Roles.Contains(MutedRole))
+                {
+                    await targetUser.RevokeRoleAsync(MutedRole);
+                    var UnmutedEmbed = new DiscordEmbedBuilder()
+                    {
+                        Color = Settings.GetPrimaryColor(),
+                        Title = $"{targetUser.Username} Unmuted",
+                        Description = $"By: {ctx.User.Username}",
+                    };
+                    var UnmutedMessage = await ctx.RespondAsync(UnmutedEmbed);
+                    await Task.Delay(5000);
+                    await UnmutedMessage.DeleteAsync();
+                }
+                else
+                {
+                    var NotMutedEmbed = new DiscordEmbedBuilder()
+                    {
+                        Color = DiscordColor.Red,
+                        Title = "User is not muted",
+                        Description = "The user is not muted and therefore cannot be unmuted"
+                    };
+                    var NotMutedMessage = await ctx.RespondAsync(NotMutedEmbed);
+                    await Task.Delay(5000);
+                    await NotMutedMessage.DeleteAsync();
+                }
+            }
+            if (!ctx.Member.Permissions.HasPermission(Permissions.ManageRoles))
+            {
+                var LackPermsEmbed = new DiscordEmbedBuilder()
+                {
+                    Color = DiscordColor.Red,
+                    Title = "You are missing the following permission:",
+                    Description = "Manage Roles"
+                };
+                var LackPermsMessage = await ctx.RespondAsync(LackPermsEmbed);
+                await Task.Delay(5000);
+                await LackPermsMessage.DeleteAsync();
+            }
+        }
+        [Command("unmute")]
+        public async Task unmuteCatch(CommandContext ctx)
+        {
+            if (ctx.Member.Permissions.HasPermission(Permissions.ManageRoles))
+            {
+                await ctx.Message.DeleteAsync();
+                var MutedRole = Settings.GetMutedRole(ctx.Guild.Id);
+                if (MutedRole == 0)
+                {
+                    var NoMutedRoleEmbed = new DiscordEmbedBuilder()
+                    {
+                        Color = DiscordColor.Red,
+                        Title = "No Muted Role or no duration set",
+                        Description = "If there is no role set please use the setmuterole command or use the duration format (s,m,h,d,y)"
+                    };
+                    await ctx.RespondAsync(NoMutedRoleEmbed);
+                }
+                else
+                {
+                    var NoUserEmbed = new DiscordEmbedBuilder()
+                    {
+                        Color = DiscordColor.Red,
+                        Title = "No User Provided",
+                        Description = "Please provide a user to unmute"
+                    };
+                    var NoUserMessage = await ctx.RespondAsync(NoUserEmbed);
+                    await Task.Delay(5000);
+                    await NoUserMessage.DeleteAsync();
+                }
             }
             if (!ctx.Member.Permissions.HasPermission(Permissions.ManageRoles))
             {

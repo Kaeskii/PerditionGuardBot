@@ -23,10 +23,6 @@ namespace PerditionGuardBot.Commands
             {
                 MutedRole = 965343669366423612;
             }
-            else
-            {
-                MutedRole = 0;
-            }
             return MutedRole;
         }
         public static void SetMutedRole(ulong input)

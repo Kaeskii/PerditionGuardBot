@@ -150,7 +150,7 @@ namespace PerditionGuardBot
             } // I can probably use this for an image only channel too.
         }
 
-        private static async Task WelcomeMessage(DiscordClient client, GuildMemberAddEventArgs arg) // join server message (needs some improvement)
+        private static async Task WelcomeMessage(DiscordClient client, GuildMemberAddEventArgs arg) // join server message (needs some improvement) (not working as of march, I suspect profile creation is the porblem as it worked before that implimentation)
         {
             var UserInfo = new StoredUserInfo()
             {

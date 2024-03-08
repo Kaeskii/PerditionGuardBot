@@ -16,8 +16,8 @@ namespace PerditionGuardBot.Commands.Basic
         // Everyone Command List
         //
         // 1: Ping (working)
-        // 2: whois (not started)
-        // 3: avatar (not started) (Alias: av)
+        // 2: whois (started)
+        // 3: avatar (working) (embedded) (Alias: av)
         // 4: serverinfo (not started) (Alias: si)
         //
         // End
@@ -46,7 +46,7 @@ namespace PerditionGuardBot.Commands.Basic
         // avatar Commands
 
 
-        [Command("avatar")]
+        [Command("avatar")] // nice simple command
         [Aliases("av")]
         public async Task Avatar(CommandContext ctx, DiscordMember targetUser)
         {

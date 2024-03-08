@@ -1,4 +1,57 @@
 {
   "userInfo": "User Information Storage",
-  "members": []
+  "members": [
+    {
+      "UserName": "dan_7638",
+      "UserID": 807300132411801611,
+      "AvatarURL": "https://cdn.discordapp.com/avatars/807300132411801611/8dd2cf0ca612122128edb1df05eb56b6.png?size=1024",
+      "Level": 1,
+      "XP": 0.0,
+      "Bans": 0,
+      "Kicks": 0,
+      "Warnings": 0,
+      "McbeCheater": false,
+      "McbeCheaterCaughtBy": "Null",
+      "IsBooster": false
+    },
+    {
+      "UserName": ".sebxx",
+      "UserID": 811298642509168661,
+      "AvatarURL": "https://cdn.discordapp.com/avatars/811298642509168661/1bbd8c09dc44bbfc656b74fd668cc290.png?size=1024",
+      "Level": 1,
+      "XP": 0.0,
+      "Bans": 0,
+      "Kicks": 0,
+      "Warnings": 0,
+      "McbeCheater": false,
+      "McbeCheaterCaughtBy": "Null",
+      "IsBooster": false
+    },
+    {
+      "UserName": "xpranknils.",
+      "UserID": 1214558739302981752,
+      "AvatarURL": "https://cdn.discordapp.com/avatars/1214558739302981752/a3b87717ae43a9cf562c7ca7a1c91399.png?size=1024",
+      "Level": 1,
+      "XP": 0.0,
+      "Bans": 0,
+      "Kicks": 0,
+      "Warnings": 0,
+      "McbeCheater": false,
+      "McbeCheaterCaughtBy": "Null",
+      "IsBooster": false
+    },
+    {
+      "UserName": "zmqw_",
+      "UserID": 1174036304707731570,
+      "AvatarURL": "https://cdn.discordapp.com/avatars/1174036304707731570/bf703dfc668b4393f90c892209df7d75.png?size=1024",
+      "Level": 1,
+      "XP": 0.0,
+      "Bans": 0,
+      "Kicks": 0,
+      "Warnings": 0,
+      "McbeCheater": false,
+      "McbeCheaterCaughtBy": "Null",
+      "IsBooster": false
+    }
+  ]
 }

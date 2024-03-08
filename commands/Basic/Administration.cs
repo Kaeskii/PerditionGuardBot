@@ -35,6 +35,7 @@ namespace PerditionGuardBot.Commands
 
             if (ctx.Member.Permissions.HasPermission(Permissions.Administrator))
             {
+                await ctx.Message.DeleteAsync();
                 await ctx.RespondAsync($"Testing admin functions\nping: {ctx.Client.Ping}\ntrue : admin permissions accessible"); // displays testing messgae and sends current ping for each response etc
                 var adminEmbedTest = new DiscordEmbedBuilder()
                 {
@@ -68,6 +69,7 @@ namespace PerditionGuardBot.Commands
         {
             if (ctx.Member.Permissions.HasPermission(Permissions.BanMembers))
             {
+                await ctx.Message.DeleteAsync();
                 string OriginalReason = reason;
                 if (reason == null)
                     reason = "Not specified by " + ctx.User.Username;
@@ -100,6 +102,7 @@ namespace PerditionGuardBot.Commands
         {
             if (ctx.Member.Permissions.HasPermission(Permissions.BanMembers))
             {
+                await ctx.Message.DeleteAsync();
                 string OriginalReason = reason;
                 if (reason == null)
                     reason = "Not specified by " + ctx.User.Username;
@@ -132,6 +135,7 @@ namespace PerditionGuardBot.Commands
         {
             if (ctx.Member.Permissions.HasPermission(Permissions.BanMembers))
             {
+                await ctx.Message.DeleteAsync();
                 var MissingInfoEmbed = new DiscordEmbedBuilder()
                 {
                     Color = DiscordColor.Red,
@@ -165,6 +169,7 @@ namespace PerditionGuardBot.Commands
         {
             if (ctx.Member.Permissions.HasPermission(Permissions.BanMembers))
             {
+                await ctx.Message.DeleteAsync();
                 string OriginalReason = reason;
                 if (reason == null)
                     reason = "Not specified by " + ctx.User.Username;
@@ -197,6 +202,7 @@ namespace PerditionGuardBot.Commands
         {
             if (ctx.Member.Permissions.HasPermission(Permissions.BanMembers))
             {
+                await ctx.Message.DeleteAsync();
                 var MissingInfoEmbed = new DiscordEmbedBuilder()
                 {
                     Color = DiscordColor.Red,
@@ -230,12 +236,14 @@ namespace PerditionGuardBot.Commands
         {
             if (ctx.Member.Permissions.HasPermission(Permissions.ManageChannels))
             {
+                await ctx.Message.DeleteAsync();
                 var Everyonerole = ctx.Guild.GetRole(ctx.Guild.Id);
                 await ctx.Channel.AddOverwriteAsync(Everyonerole, Permissions.None, Permissions.SendMessages);
                 var LockEmbed = new DiscordEmbedBuilder()
                 {
                     Color = Settings.GetPrimaryColor(),
                     Title = "Channel Locked",
+                    Footer = new DiscordEmbedBuilder.EmbedFooter() { Text = $"By | {ctx.User.Username}" }
                 };
                 var LockMsg = await ctx.RespondAsync(LockEmbed);
                 await Task.Delay(1000 * 60 * 60); // displays the message for 1 hour
@@ -259,12 +267,14 @@ namespace PerditionGuardBot.Commands
         {
             if (ctx.Member.Permissions.HasPermission(Permissions.ManageChannels))
             {
+                await ctx.Message.DeleteAsync();
                 var Everyonerole = ctx.Guild.GetRole(ctx.Guild.Id);
                 await ctx.Channel.AddOverwriteAsync(Everyonerole, Permissions.SendMessages, Permissions.None);
                 var UnlockEmbed = new DiscordEmbedBuilder()
                 {
                     Color = Settings.GetPrimaryColor(),
                     Title = "Channel Unlocked",
+                    Footer = new DiscordEmbedBuilder.EmbedFooter() { Text = $"By | {ctx.User.Username}" }
                 };
                 var UnlockMsg = await ctx.RespondAsync(UnlockEmbed);
                 await Task.Delay(1000 * 60 * 60); // displays the message for 1 hour
@@ -293,6 +303,7 @@ namespace PerditionGuardBot.Commands
         {
             if (ctx.Member.Permissions.HasPermission(Permissions.ManageRoles))
             {
+                await ctx.Message.DeleteAsync();
                 if (targetUser != null && role != null)
                 {
                     if (targetUser.Roles.Contains(role))
@@ -337,6 +348,7 @@ namespace PerditionGuardBot.Commands
             Ignore.ToString(); // the target User is used so that if one is provided but no role is provided this command will run and not the role ID catch instead
             if (ctx.Member.Permissions.HasPermission(Permissions.ManageRoles))
             {
+                await ctx.Message.DeleteAsync();
                 var MissingInfoEmbed = new DiscordEmbedBuilder()
                 {
                     Color = DiscordColor.Red,
@@ -365,6 +377,7 @@ namespace PerditionGuardBot.Commands
         {
             if (ctx.Member.Permissions.HasPermission(Permissions.ManageRoles))
             {
+                await ctx.Message.DeleteAsync();
                 var MissingInfoEmbed = new DiscordEmbedBuilder()
                 {
                     Color = DiscordColor.Red,
@@ -398,6 +411,7 @@ namespace PerditionGuardBot.Commands
         {
             if (ctx.Member.Permissions.HasPermission(Permissions.ManageRoles))
             {
+                await ctx.Message.DeleteAsync();
                 if (roleName != null)
                 {
                     var newRole = await ctx.Guild.CreateRoleAsync(roleName);
@@ -435,6 +449,7 @@ namespace PerditionGuardBot.Commands
         {
             if (ctx.Member.Permissions.HasPermission(Permissions.ManageRoles))
             {
+                await ctx.Message.DeleteAsync();
                 var MissingInfoEmbed = new DiscordEmbedBuilder()
                 {
                     Color = DiscordColor.Red,
