@@ -15,7 +15,7 @@ namespace PerditionGuardBot.Commands.ProfileSystem
         {
             try
             {
-                var Path = @"C:\Users\Kayla\source\repos\PerditionGuardBot\obj\Debug\net8.0\UserInfo.json";
+                var Path = @"C:\Users\Kayla\source\repos\PerditionGuardBot\bin\Debug\net8.0\UserInfo.json";
                 var Json = File.ReadAllText(Path);
                 var JsonObj = JObject.Parse(Json);
                 var members = JsonObj["members"].ToObject<List<StoredUserInfo>>();
@@ -79,7 +79,7 @@ namespace PerditionGuardBot.Commands.ProfileSystem
             levelup = false;
             try
             {
-                var Path = @"C:\Users\Kayla\source\repos\PerditionGuardBot\obj\Debug\net8.0\UserInfo.json";
+                var Path = @"C:\Users\Kayla\source\repos\PerditionGuardBot\bin\Debug\net8.0\UserInfo.json";
                 var Json = File.ReadAllText(Path);
                 var JsonObj = JObject.Parse(Json);
                 var members = JsonObj["members"].ToObject<List<StoredUserInfo>>();
