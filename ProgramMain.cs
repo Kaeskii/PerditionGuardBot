@@ -9,12 +9,6 @@ using PerditionGuardBot.Commands.Basic;
 using PerditionGuardBot.Commands.ProfileSystem;
 using PerditionGuardBot.config;
 using PerditionGuardBot.TicketsSystem;
-using System;
-using System.Collections.Generic;
-using System.Formats.Asn1;
-using System.Linq;
-using System.Threading.Channels;
-using System.Threading.Tasks;
 
 namespace PerditionGuardBot
 {
@@ -124,7 +118,7 @@ namespace PerditionGuardBot
                     if (arg.Message.Content.ToLower().Contains(blword)) // wildcard (works anywhere in a messge) and not case sensitive.
                     {
                         await arg.Message.DeleteAsync();
-                        DiscordMessage message = await arg.Channel.SendMessageAsync("don't say that here.");
+                        var message = await arg.Channel.SendMessageAsync("don't say that here.");
                         await Task.Delay(10000); // waits 10 seconds
                         await arg.Channel.DeleteMessageAsync(message); // deletes
                     }
