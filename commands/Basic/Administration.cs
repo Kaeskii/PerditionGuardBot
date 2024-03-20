@@ -407,7 +407,7 @@ namespace PerditionGuardBot.Commands
 
         [Command("createrole")]
         [Aliases("cr")]
-        public async Task CreateRole(CommandContext ctx, string roleName, string hexcode, [Optional] DiscordMember targetUser)
+        public async Task CreateRole(CommandContext ctx, string roleName, string hexcode, [Optional]DiscordMember targetUser)
         {
             if (ctx.Member.Permissions.HasPermission(Permissions.ManageRoles))
             {
@@ -422,6 +422,39 @@ namespace PerditionGuardBot.Commands
                         await targetUser.GrantRoleAsync(newRole);
                         desc += $"\nGiven to {targetUser.Username}";
                     }
+                    var RoleCreatedEmbed = new DiscordEmbedBuilder()
+                    {
+                        Color = new DiscordColor(hexcode),
+                        Title = $"Role {roleName} created",
+                        Description = $"{desc}"
+                    };
+                    await ctx.RespondAsync(RoleCreatedEmbed);
+                }
+            }
+            if (!ctx.Member.Permissions.HasPermission(Permissions.ManageRoles))
+            {
+                var LackPermsEmbed = new DiscordEmbedBuilder()
+                {
+                    Color = DiscordColor.Red,
+                    Title = "You are missing the following permission:",
+                    Description = "Manage Roles"
+                };
+                var LackPermsMessage = await ctx.RespondAsync(LackPermsEmbed);
+                await Task.Delay(5000);
+                await LackPermsMessage.DeleteAsync();
+            }
+        }
+        [Command("createrole")]
+        public async Task CreateRole(CommandContext ctx, string roleName, string hexcode)
+        {
+            if (ctx.Member.Permissions.HasPermission(Permissions.ManageRoles))
+            {
+                await ctx.Message.DeleteAsync();
+                if (roleName != null)
+                {
+                    var newRole = await ctx.Guild.CreateRoleAsync(roleName);
+                    await newRole.ModifyAsync(x => x.Color = new DiscordColor(hexcode));
+                    string desc = $"With colour {hexcode}";
                     var RoleCreatedEmbed = new DiscordEmbedBuilder()
                     {
                         Color = new DiscordColor(hexcode),
