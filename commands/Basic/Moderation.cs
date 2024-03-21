@@ -1,16 +1,8 @@
-﻿using DSharpPlus.CommandsNext;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using DSharpPlus;
+using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
-using DSharpPlus.Interactivity.Extensions;
-using DSharpPlus;
-using DSharpPlus.CommandsNext.Converters;
 using System.Runtime.InteropServices;
-using System.Threading.Channels;
 
 namespace PerditionGuardBot.Commands
 {
