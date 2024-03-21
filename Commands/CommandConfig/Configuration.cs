@@ -14,7 +14,7 @@ namespace PerditionGuardBot.Commands
         // 3: blacklist (not started)
         // 4: autodelete (not started)
         // 5: info and rule commands (perdition only) (not started)
-        // 6: kill (working) spent 2 hours trying to make a reconnect command but it's not possible.
+        // 6: stop (working) spent 2 hours trying to make a reconnect command but it's not possible.
         // 7: sticky roles (not started)
         // 8: prefix (not started) spent a few hours trying to make this too but couldn't find a way to do it. It would work but not without a restart of the bot.
         // 9: reaction roles (not started)
@@ -45,7 +45,7 @@ namespace PerditionGuardBot.Commands
         // Bot control commands
 
 
-        [Command("Kill")]
+        [Command("stop")]
         public async Task Kill(CommandContext ctx)
         {
             if (ctx.Member.Id == 514141397960359970 || ctx.Member.Id == 596553233024155679)

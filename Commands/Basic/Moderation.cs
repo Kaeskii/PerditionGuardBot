@@ -18,7 +18,7 @@ namespace PerditionGuardBot.Commands
         // 6: cleanup (part of the purge slash commands.)
         // 6.5: setmuterole (working) (embedded)
         // 7: mute (asylum) (working) (dm the user - make toggleable) (embedded)
-        // 8: unmute (asylum) (not started)
+        // 8: unmute (asylum) (Not tested)
         //
         // End
 
