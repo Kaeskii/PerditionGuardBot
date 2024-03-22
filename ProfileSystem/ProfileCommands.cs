@@ -20,7 +20,7 @@ namespace PerditionGuardBot.Commands
         // End
 
         [Command("profile")]
-        public async Task ProfileCommand(CommandContext ctx)
+        public async Task Profile(CommandContext ctx)
         {
             var UserInfo = new StoredUserInfo()
             {

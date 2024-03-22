@@ -96,6 +96,8 @@ namespace PerditionGuardBot
             // prefix Commands and server settings
             GetCommands().RegisterCommands<Configuration>();
             GetCommands().RegisterCommands<Everyone>();
+            // register the profile commands
+            GetCommands().RegisterCommands<ProfileCommands>();
 
             await Client.ConnectAsync();
             await Task.Delay(-1);

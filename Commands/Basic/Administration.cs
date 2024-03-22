@@ -398,7 +398,7 @@ namespace PerditionGuardBot.Commands
 
         [Command("createrole")]
         [Aliases("cr")]
-        public async Task CreateRole(CommandContext ctx, string roleName, string hexcode, [Optional]DiscordMember targetUser)
+        public async Task CreateRole(CommandContext ctx, string roleName, string hexcode, DiscordMember targetUser)
         {
             if (ctx.Member.Permissions.HasPermission(Permissions.ManageRoles))
             {
